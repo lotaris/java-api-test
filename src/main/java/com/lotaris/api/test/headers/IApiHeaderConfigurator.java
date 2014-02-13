@@ -1,4 +1,4 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.api.test.headers;
 
 /**
  * Object capable of producing an {@link IApiHeaderConfiguration} to configure API request headers.

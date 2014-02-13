@@ -1,4 +1,4 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.api.test.headers;
 
 /**
  * Locator of {@link IApiHeaderConfigurator} instances.

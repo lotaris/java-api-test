@@ -1,5 +1,9 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.dcc.test.rules;
 
+import com.lotaris.api.test.headers.IApiHeaderConfiguration;
+import com.lotaris.api.test.headers.IApiHeaderConfiguratorLocator;
+import com.lotaris.api.test.headers.ApiHeaderConfigurator;
+import com.lotaris.api.test.headers.ApiHeadersManager;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -59,7 +63,7 @@ public class ApiTestHeaderConfigurationRule implements TestRule {
 					headerConfiguratorLocator.getHeaderConfigurator(headerConfigurator.value()).getApiHeaderConfiguration();
 
 			// apply the configuration to the headers manager
-			configuration.configure(headersManagerRule.getHeadersManager());
+			headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, configuration, true);
 		}
 	}
 }

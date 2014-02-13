@@ -95,14 +95,40 @@ public class ApiTestRequest {
 	}
 
 	/**
-	 * Set a request header. If the header was already set, it is overwritten.
+	 * Adds a request header. The header will be appended to the end of the list.
 	 *
 	 * @param name header name
 	 * @param value header value
 	 * @return this request
+	 * @throws NullPointerException if the value is null
+	 */
+	public ApiTestRequest addHeader(String name, Object value) {
+		request.addHeader(name, value.toString());
+		return this;
+	}
+
+	/**
+	 * Sets a request header. Previously added headers with the same name are overwritten.
+	 *
+	 * @param name header name
+	 * @param value header value
+	 * @return this request
+	 * @throws NullPointerException if the value is null
 	 */
 	public ApiTestRequest setHeader(String name, Object value) {
+		request.removeHeaders(name);
 		request.setHeader(name, value.toString());
+		return this;
+	}
+
+	/**
+	 * Removes all request headers with the specified name.
+	 *
+	 * @param name header name
+	 * @return this request
+	 */
+	public ApiTestRequest removeHeader(String name) {
+		request.removeHeaders(name);
 		return this;
 	}
 
@@ -141,8 +167,8 @@ public class ApiTestRequest {
 	 * @throws ApiTestException if a body is not supported for the HTTP method of this request
 	 */
 	private void setBody(HttpEntity entity) {
-		if (entity != null && !(request instanceof HttpEntityEnclosingRequest)) {
-			throw new ApiTestException(request.getMethod() + " requests cannot have an entity");
+		if (!(request instanceof HttpEntityEnclosingRequest)) {
+			throw new ApiTestException(request.getMethod() + " requests cannot have a body");
 		}
 
 		((HttpEntityEnclosingRequest) request).setEntity(entity);

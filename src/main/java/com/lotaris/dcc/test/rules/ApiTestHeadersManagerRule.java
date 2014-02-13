@@ -1,5 +1,6 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.dcc.test.rules;
 
+import com.lotaris.api.test.headers.ApiHeadersManager;
 import org.junit.rules.ExternalResource;
 
 /**

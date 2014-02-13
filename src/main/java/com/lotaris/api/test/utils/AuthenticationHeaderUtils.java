@@ -1,4 +1,4 @@
-package com.lotaris.api.test.client.authentication;
+package com.lotaris.api.test.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.api.test.headers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

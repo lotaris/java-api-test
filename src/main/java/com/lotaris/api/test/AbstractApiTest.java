@@ -1,18 +1,19 @@
 package com.lotaris.api.test;
 
-import com.lotaris.api.test.client.ApiTestClientRule;
-import com.lotaris.dcc.test.utils.client.header.ApiTestHeaderConfigurationRule;
+import com.lotaris.dcc.test.rules.ApiTestClientRule;
+import com.lotaris.dcc.test.rules.ApiTestHeaderConfigurationRule;
 import com.jayway.jsonassert.JsonAssert;
 import com.jayway.jsonassert.JsonAsserter;
-import com.lotaris.dcc.test.utils.client.header.ApiTestHeadersManagerRule;
+import com.lotaris.dcc.test.rules.ApiTestHeadersManagerRule;
 import com.lotaris.api.test.client.ApiTestRequest;
 import com.lotaris.api.test.client.ApiTestRequestBody;
 import com.lotaris.api.test.client.ApiUriBuilder;
 import com.lotaris.api.test.client.ApiTestResponse;
-import com.lotaris.dcc.test.utils.client.header.ApiHeader;
-import com.lotaris.dcc.test.utils.client.header.ApiHeaderConfigurator;
-import com.lotaris.dcc.test.utils.client.header.IApiHeaderConfiguration;
-import com.lotaris.dcc.test.utils.client.header.IApiHeaderConfiguratorLocator;
+import com.lotaris.api.test.headers.ApiHeader;
+import com.lotaris.api.test.headers.ApiHeaderConfigurator;
+import com.lotaris.api.test.headers.ApiHeadersManager;
+import com.lotaris.api.test.headers.IApiHeaderConfiguration;
+import com.lotaris.api.test.headers.IApiHeaderConfiguratorLocator;
 import java.util.ArrayList;
 import java.util.List;
 import javax.json.JsonStructure;
@@ -71,7 +72,9 @@ public abstract class AbstractApiTest {
 		// template cannot be changed.
 		build();
 	}
+	//</editor-fold>
 
+	//<editor-fold defaultstate="collapsed" desc="Construction Template">
 	/**
 	 * Template method responsible for initializing the API test class.
 	 */
@@ -102,7 +105,6 @@ public abstract class AbstractApiTest {
 			chain = chain.around(rule);
 		}
 	}
-	//</editor-fold>
 
 	/**
 	 * Prepare the construction of the API test class. Allows implementations to set up required
@@ -144,63 +146,22 @@ public abstract class AbstractApiTest {
 	 * @return a header configurator locator
 	 */
 	protected abstract IApiHeaderConfiguratorLocator getHeaderConfiguratorLocator();
+	//</editor-fold>
 
+	//<editor-fold defaultstate="collapsed" desc="Helpers: URIs">
 	/**
-	 * Configure request headers.
+	 * Returns an URI builder relative to the default API entry point.
 	 *
-	 * @param headerConfiguration the configuration to apply
+	 * @param pathElements initial path elements (optional)
+	 * @return an URI builder
+	 * @see #getEntryPoint()
 	 */
-	public void configureHeader(IApiHeaderConfiguration headerConfiguration) {
-		headersManagerRule.getHeadersManager().configureHeader(headerConfiguration);
+	protected ApiUriBuilder uri(String... pathElements) {
+		return new ApiUriBuilder(entryPoint).path(pathElements);
 	}
+	//</editor-fold>
 
-	/**
-	 * Configure request headers for the next request.
-	 *
-	 * @param headerConfiguration the configuration to apply
-	 */
-	public void configureHeaderForNextRequest(IApiHeaderConfiguration headerConfiguration) {
-		headersManagerRule.getHeadersManager().configureHeaderForNextRequest(headerConfiguration);
-	}
-
-	/**
-	 * Add a new header to the next request.
-	 *
-	 * @param name header name
-	 * @param value header value
-	 */
-	protected void setHeaderForNextRequest(String name, String value) {
-		headersManagerRule.getHeadersManager().setHeaderForNextRequest(name, value);
-	}
-
-	/**
-	 * Add a new header to the next request.
-	 *
-	 * @param header the header to add
-	 */
-	protected void setHeader(ApiHeader header) {
-		headersManagerRule.getHeadersManager().setHeaderForNextRequest(header);
-	}
-
-	/**
-	 * Removes a header from the next request.
-	 *
-	 * @param name name of the header to remove
-	 */
-	protected void removeHeaderForNextRequest(String name) {
-		headersManagerRule.getHeadersManager().removeHeaderForNextRequest(name);
-	}
-
-	/**
-	 * Replaces a header for the next request.
-	 *
-	 * @param name header name
-	 * @param value header value
-	 */
-	protected void replaceHeaderForNextRequest(String name, String value) {
-		headersManagerRule.getHeadersManager().replaceHeaderForNextRequest(name, value);
-	}
-
+	//<editor-fold defaultstate="collapsed" desc="Helpers: HTTP requests">
 	/**
 	 * Performs a GET request on a resource.
 	 *
@@ -306,7 +267,131 @@ public abstract class AbstractApiTest {
 	protected ApiTestResponse deleteResource(ApiUriBuilder uriBuilder) {
 		return executeJsonRequest(ApiTestRequest.DELETE, uriBuilder, null);
 	}
+	//</editor-fold>
 
+	//<editor-fold defaultstate="collapsed" desc="Helpers: header configuration">
+	/**
+	 * Set a header for all subsequent requests. Previous headers with the same name are
+	 * overwritten.
+	 *
+	 * @param name header name
+	 * @param value header value
+	 */
+	protected void setHeaderForAllRequests(String name, String value) {
+		setHeaderForAllRequests(new ApiHeader(name, value));
+	}
+
+	/**
+	 * Set a header for all subsequent requests. Previous headers with the same name are
+	 * overwritten.
+	 *
+	 * @param header the header to set
+	 */
+	protected void setHeaderForAllRequests(ApiHeader header) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, header, true);
+	}
+
+	/**
+	 * Set request headers for all subsequent requests. Previous headers with the same name are
+	 * overwritten.
+	 *
+	 * @param headerConfiguration the headers to set
+	 */
+	protected void setHeadersForAllRequests(IApiHeaderConfiguration headerConfiguration) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, headerConfiguration, true);
+	}
+
+	/**
+	 * Set a header for the next request. Previous headers with the same name are overwritten (for
+	 * the next request).
+	 *
+	 * @param name header name
+	 * @param value header value
+	 */
+	protected void setHeaderForNextRequest(String name, String value) {
+		setHeaderForNextRequest(new ApiHeader(name, value));
+	}
+
+	/**
+	 * Set a header for the next request. Previous headers with the same name are overwritten (for
+	 * the next request).
+	 *
+	 * @param header the header to set
+	 */
+	protected void setHeaderForNextRequest(ApiHeader header) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, header, false);
+	}
+
+	/**
+	 * Set request headers for the next request. Previous headers with the same name are overwritten
+	 * (for the next request).
+	 *
+	 * @param headerConfiguration the headers to set
+	 */
+	protected void setHeadersForNextRequest(IApiHeaderConfiguration headerConfiguration) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, headerConfiguration, false);
+	}
+
+	/**
+	 * Alias for {@link #setHeaderForNextRequest(java.lang.String, java.lang.String)}.
+	 *
+	 * @param name header name
+	 * @param value header value
+	 */
+	protected void replaceHeaderForNextRequest(String name, String value) {
+		setHeaderForNextRequest(name, value);
+	}
+
+	/**
+	 * Alias for
+	 * {@link #setHeaderForNextRequest(com.lotaris.dcc.test.utils.client.header.ApiHeader)}
+	 *
+	 * @param header the header to set
+	 */
+	protected void replaceHeaderForNextRequest(ApiHeader header) {
+		setHeaderForNextRequest(header);
+	}
+
+	/**
+	 * Removes a header for the next request. All headers with the specified name are removed.
+	 *
+	 * @param name name of the header to remove
+	 */
+	protected void removeHeaderForNextRequest(String name) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, new ApiHeader(name, null), false);
+	}
+
+	/**
+	 * Removes headers for the next request. All headers with the specified names are removed.
+	 *
+	 * @param headerConfiguration headers to remove
+	 */
+	protected void removeHeadersForNextRequest(IApiHeaderConfiguration headerConfiguration) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, headerConfiguration, false);
+	}
+
+	/**
+	 * Removes a header for all subsequent requests. All headers with the specified name are
+	 * removed.
+	 *
+	 * @param name name of the header to remove
+	 */
+	protected void removeHeaderForAllRequests(String name) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, new ApiHeader(name, null), true);
+	}
+
+	/**
+	 * Removes headers for all subsequent requests. All headers with the specified names are
+	 * removed.
+	 *
+	 * @param headerConfiguration headers to remove
+	 */
+	protected void removeHeadersForAllRequests(IApiHeaderConfiguration headerConfiguration) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, headerConfiguration, true);
+	}
+	//</editor-fold>
+
+	//<editor-fold defaultstate="collapsed" desc="Helpers: JSON assertions">
 	/**
 	 * Returns a JsonPath asserter for a response body string.
 	 *
@@ -328,18 +413,9 @@ public abstract class AbstractApiTest {
 	protected JsonAsserter withJson(ApiTestResponse response) {
 		return withJson(response.getResponseAsString());
 	}
+	//</editor-fold>
 
-	/**
-	 * Returns an URI builder relative to the default API entry point.
-	 *
-	 * @param pathElements initial path elements (optional)
-	 * @return an URI builder
-	 * @see #getEntryPoint()
-	 */
-	protected ApiUriBuilder uri(String... pathElements) {
-		return new ApiUriBuilder(entryPoint).path(pathElements);
-	}
-
+	//<editor-fold defaultstate="collapsed" desc="Private Utilities">
 	/**
 	 * Executes a standard API request. By default:
 	 *
@@ -356,18 +432,19 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	private ApiTestResponse executeJsonRequest(String method, ApiUriBuilder uriBuilder, JsonStructure json) {
-
+		
 		// prepare request entity (if present); Content-Type header is defined by the entity
 		final ApiTestRequestBody entity = json != null ? ApiTestRequestBody.fromJson(json) : null;
-
+		
 		// build request and set Accept header
 		final ApiTestRequest request = new ApiTestRequest(method, uriBuilder, entity);
 		request.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
-
+		
 		// configure request headers
-		headersManagerRule.getHeadersManager().configure(request);
-
+		headersManagerRule.getHeadersManager().applyConfiguration(request);
+		
 		// perform the request and return the response
 		return clientRule.getClient().execute(request);
 	}
+	//</editor-fold>
 }

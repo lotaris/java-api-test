@@ -1,4 +1,7 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.api.test.headers;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * API header configuration that will add {@link AuthenticationBasicApiHeader} to the request.
@@ -28,13 +31,8 @@ public class AuthenticationBasicApiHeaderConfiguration implements IApiHeaderConf
 	}
 
 	@Override
-	public void configureForNextRequest(ApiHeadersManager headersManager) {
-		headersManager.setHeaderForNextRequest(buildHeader());
-	}
-
-	@Override
-	public void configure(ApiHeadersManager headersManager) {
-		headersManager.setHeader(buildHeader());
+	public List<ApiHeader> getHeaders() {
+		return Arrays.asList(new ApiHeader[]{buildHeader()});
 	}
 
 	/**

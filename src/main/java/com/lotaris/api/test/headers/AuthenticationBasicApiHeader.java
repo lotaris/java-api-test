@@ -1,4 +1,4 @@
-package com.lotaris.dcc.test.utils.client.header;
+package com.lotaris.api.test.headers;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
