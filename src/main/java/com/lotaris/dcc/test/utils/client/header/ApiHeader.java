@@ -1,35 +1,42 @@
 package com.lotaris.dcc.test.utils.client.header;
 
-import javax.ws.rs.client.ClientRequestContext;
+import com.lotaris.api.test.client.ApiTestRequest;
 
 /**
- * Define an API header to configure a request
- * 
+ * HTTP request header with meta information to indicate whether it concerns only the next request
+ * or should be kept.
+ *
+ * @see ApiHeadersManager
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 public class ApiHeader {
-	/**
-	 * Header name
-	 */
-	private String name;
 
 	/**
-	 * Header value
+	 * Header name.
+	 */
+	private String name;
+	/**
+	 * Header value.
 	 */
 	private String value;
-	
 	/**
-	 * Flags to keep the state
+	 * Whether the header should be removed for the next request.
 	 */
 	private boolean remove = false;
+	/**
+	 * Whether the header should be replaced for the next request.
+	 */
 	private boolean replace = false;
+	/**
+	 * Whether the header should be kept for all requests.
+	 */
 	private boolean keep = false;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param name The name of the header
-	 * @param value The value of the header
+	 * Constructs a new header.
+	 *
+	 * @param name header name
+	 * @param value header value
 	 */
 	public ApiHeader(String name, String value) {
 		this.name = name;
@@ -37,68 +44,79 @@ public class ApiHeader {
 	}
 
 	/**
-	 * @return The name of the header
+	 * Returns the name of the header.
+	 *
+	 * @return the header name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return Header value without computing
+	 * Returns the value of the header.
+	 *
+	 * @return the header value
 	 */
 	public String getValue() {
 		return value;
 	}
-	
+
 	/**
-	 * @param remove Set the state of the header to be removed
+	 * Sets whether the header should be removed for the next request.
+	 *
+	 * @param remove true to remove the header
 	 */
 	void setRemoved(boolean remove) {
 		this.remove = remove;
 	}
 
 	/**
-	 * @param remove Set the state of the header to be replaced
+	 * Sets whether the header should be replaced for the next request.
+	 *
+	 * @param replace true to replace the header
 	 */
 	void setReplace(boolean replace) {
 		this.replace = replace;
 	}
-	
+
 	/**
-	 * @param remove Set the state of the header to be kept
+	 * Sets whether the header should be kept for all requests.
+	 *
+	 * @param keep true to keep the header
 	 */
 	void setKept(boolean keep) {
 		this.keep = keep;
 	}
 
 	/**
-	 * @return True if the header must be removed
+	 * @return true if the header should be removed for the next request
 	 */
 	boolean isRemoved() {
 		return remove;
 	}
 
 	/**
-	 * @return True if the header must be replaced
+	 * @return true if the header should be replaced for the next request
 	 */
 	boolean isReplaced() {
 		return replace;
 	}
 
 	/**
-	 * @return True if the header must be kept
+	 * @return true if the header should be kept for all requests
 	 */
 	boolean isKept() {
 		return keep;
 	}
-	
+
 	/**
-	 * Build the header value
-	 * 
-	 * @param requestContext The request context to get info to build richer headers
-	 * @return The header value
+	 * Returns the value of the header. The API request is provided for headers whose value may
+	 * depend on request information.
+	 *
+	 * @param request the API request
+	 * @return the header value
 	 */
-	public String computeValue(ClientRequestContext requestContext) {
+	public String computeValue(ApiTestRequest request) {
 		return value != null ? value.toString() : null;
 	}
 }

@@ -1,14 +1,14 @@
 package com.lotaris.dcc.test.utils.client.header;
 
 /**
- * Define an API header configurator to retrieve an object that
- * allows to configure the API Test client.
- * 
+ * Object capable of producing an {@link IApiHeaderConfiguration} to configure API request headers.
+ *
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 public interface IApiHeaderConfigurator {
+
 	/**
-	 * @return The API header configuration
+	 * @return an API header configuration
 	 */
 	IApiHeaderConfiguration getApiHeaderConfiguration();
 }

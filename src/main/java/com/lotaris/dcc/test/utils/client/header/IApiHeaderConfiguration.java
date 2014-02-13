@@ -1,26 +1,23 @@
 package com.lotaris.dcc.test.utils.client.header;
 
-import com.lotaris.api.test.client.ApiTestClient;
-
 /**
- * Define an API header configuration
- * 
+ * API header configuration to add headers to HTTP requests through a headers manager.
+ *
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 public interface IApiHeaderConfiguration {
-	/**
-	 * Configure the API test client with the headers of the 
-	 * API header configuration for the next request
-	 * 
-	 * @param client The API test client
-	 */
-	void configureForNextRequest(ApiTestClient client);
 
 	/**
-	 * Configure the API test client with the headers of the 
-	 * API header configuration for all the requests of a test
-	 * 
-	 * @param client The API test client
+	 * Apply this headers configuration for the next request.
+	 *
+	 * @param headersManager the headers manager holding the headers state
 	 */
-	void configure(ApiTestClient client);
+	void configureForNextRequest(ApiHeadersManager headersManager);
+
+	/**
+	 * Apply this headers configuration for all requests.
+	 *
+	 * @param headersManager the headers manager holding the headers state
+	 */
+	void configure(ApiHeadersManager headersManager);
 }

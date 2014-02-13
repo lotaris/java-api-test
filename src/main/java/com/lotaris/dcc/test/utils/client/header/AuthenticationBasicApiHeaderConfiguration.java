@@ -1,22 +1,26 @@
 package com.lotaris.dcc.test.utils.client.header;
 
-import com.lotaris.api.test.client.ApiTestClient;
-
 /**
- * Represent an HTTP Basic authentication header to setup the authentication
- * through the HTTP headers.
- * 
+ * API header configuration that will add {@link AuthenticationBasicApiHeader} to the request.
+ *
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 public class AuthenticationBasicApiHeaderConfiguration implements IApiHeaderConfiguration {
+
+	/**
+	 * The username to use for basic authentication.
+	 */
 	private String user;
+	/**
+	 * The password to use for basic authentication.
+	 */
 	private String password;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param user The user
-	 * @param password The password
+	 * Constructs a new configuration.
+	 *
+	 * @param user the username
+	 * @param password the password
 	 */
 	public AuthenticationBasicApiHeaderConfiguration(String user, String password) {
 		this.user = user;
@@ -24,17 +28,17 @@ public class AuthenticationBasicApiHeaderConfiguration implements IApiHeaderConf
 	}
 
 	@Override
-	public void configureForNextRequest(ApiTestClient client) {
-		client.setHeaderForNextRequest(buildHeader());
+	public void configureForNextRequest(ApiHeadersManager headersManager) {
+		headersManager.setHeaderForNextRequest(buildHeader());
 	}
 
 	@Override
-	public void configure(ApiTestClient client) {
-		client.setHeader(buildHeader());
+	public void configure(ApiHeadersManager headersManager) {
+		headersManager.setHeader(buildHeader());
 	}
-	
+
 	/**
-	 * @return The header built for the basic authentication
+	 * @return the API header for basic authentication
 	 */
 	private ApiHeader buildHeader() {
 		return new AuthenticationBasicApiHeader(user, password);

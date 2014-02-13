@@ -6,16 +6,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to enrich the tests to allow automatic
- * configuration of the headers
- * 
+ * Annotation to automatically enrich API request headers during a test.
+ *
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiHeaderConfigurator {
+
 	/**
-	 * @return API header configurator class
+	 * Returns the type of API header configurator that will be used to configure request headers.
+	 *
+	 * @return an API header configurator class
 	 */
 	Class<? extends IApiHeaderConfigurator> value();
 }

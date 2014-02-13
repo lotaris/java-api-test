@@ -1,250 +1,86 @@
 package com.lotaris.api.test.client;
 
-import com.lotaris.dcc.test.utils.client.header.ApiHeader;
-import com.lotaris.dcc.test.utils.client.header.ApiHeaderClientFilterRequest;
-import com.lotaris.dcc.test.utils.client.header.IApiHeaderConfiguration;
-import java.util.Map;
-import javax.json.JsonStructure;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import org.glassfish.jersey.client.JerseyClient;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.glassfish.jersey.client.JerseyWebTarget;
+import java.io.IOException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 /**
- * Jersey client wrapper to make requests on the server API.
+ * HTTP client wrapper.
  *
  * @author Simon Oulevay <simon.oulevay@lotaris.com>
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
  */
 public class ApiTestClient {
-	/**
-	 * The entry point
-	 */
-	private String entryPoint;
-	
-	/**
-	 * The internal Jersey client.
-	 */
-	private JerseyClient client;
 
 	/**
-	 * Header filter client request
+	 * The internal Apache HTTP client.
 	 */
-	private ApiHeaderClientFilterRequest headerClientFilter;
+	private CloseableHttpClient client;
 
 	/**
-	 * Constructs a new client.
-	 * 
-	 * @param entryPoint The entry point
+	 * Constructs a new client. The client should be released with {@link #close()} when no longer
+	 * useful.
 	 */
-	public ApiTestClient(String entryPoint) {
-		this.entryPoint = entryPoint;
-		
-		client = new JerseyClientBuilder().build();
-		
-		headerClientFilter = new ApiHeaderClientFilterRequest();
-		
-		client.register(headerClientFilter);
+	public ApiTestClient() {
+		this.client = HttpClients.createDefault();
 	}
 
 	/**
 	 * Closes this client and all associated resources.
+	 *
+	 * @throws ApiTestException if the client could not be closed
 	 */
 	public void close() {
-		client.close();
-	}
-	
-	/**
-	 * Do a GET request
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @return The request response
-	 */
-	public ApiTestResponse getResource(ApiUriBuilder uriBuilder) {
-		return response(
-			target(uriBuilder)
-			.request()
-			.accept(MediaType.APPLICATION_JSON)
-			.get()
-		);
-	}
-	
-	/**
-	 * Do a POST request
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @return The request response
-	 */
-	public ApiTestResponse postResource(JsonStructure body, ApiUriBuilder uriBuilder) {
-		return response(
-			target(uriBuilder)
-			.request()
-			.accept(MediaType.APPLICATION_JSON)
-			.post(Entity.entity(body.toString(), MediaType.APPLICATION_JSON))
-		);
-	}
-
-	/**
-	 * Do a PUT request
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @return The request response
-	 */
-	public ApiTestResponse putResource(JsonStructure body, ApiUriBuilder uriBuilder) {
-		return response(
-			target(uriBuilder)
-			.request()
-			.accept(MediaType.APPLICATION_JSON)
-			.put(Entity.entity(body.toString(), MediaType.APPLICATION_JSON))
-		);
-	}
-	
-	/**
-	 * Do a PATCH request
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @return The request response
-	 */
-	public ApiTestResponse patchResource(JsonStructure body, ApiUriBuilder uriBuilder) {
-		return response(
-			target(uriBuilder)
-			.request()
-			.accept(MediaType.APPLICATION_JSON)
-			.method("PATCH", Entity.entity(body.toString(), MediaType.APPLICATION_JSON))
-		);		
-	}
-
-	/**
-	 * Do a DELETE request
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @param queryParamBuilder The query parameters builder
-	 * @return The request response
-	 */
-	public ApiTestResponse deleteResource(ApiUriBuilder uriBuilder) {
-		return response(
-			target(uriBuilder)
-			.request()
-			.accept(MediaType.APPLICATION_JSON)
-			.delete()
-		);
-	}
-	
-	/**
-	 * Configure headers on the client from a header configuration
-	 * 
-	 * @param headerConfiguration Header configuration
-	 */
-	public void configureHeaderForNextRequest(IApiHeaderConfiguration headerConfiguration) {
-		headerConfiguration.configureForNextRequest(this);
-	}
-
-	/**
-	 * Configure headers on the client from a header configuration
-	 * 
-	 * @param headerConfiguration Header configuration
-	 */
-	public void configureHeader(IApiHeaderConfiguration headerConfiguration) {
-		headerConfiguration.configure(this);
-	}
-	
-	/**
-	 * Add header for the next request
-	 * 
-	 * @param name Name of the header
-	 * @param value Value of the header
-	 */
-	public void setHeaderForNextRequest(final String name, final String value) {
-		headerClientFilter.setHeaderForNextRequest(name, value);
-	}
-	
-	/**
-	 * Add header for the next request
-	 * 
-	 * @param apiHeader API header
-	 */
-	public void setHeaderForNextRequest(final ApiHeader apiHeader) {
-		headerClientFilter.setHeaderForNextRequest(apiHeader);
-	}
-	
-	/**
-	 * Add header for the all requests
-	 * 
-	 * @param name Name of the header
-	 * @param value Value of the header
-	 */
-	public void setHeader(final String name, final String value) {
-		headerClientFilter.setHeader(name, value);
-	}
-
-	/**
-	 * Add header for the all requests
-	 * 
-	 * @param apiHeader API header
-	 */
-	public void setHeader(final ApiHeader apiHeader) {
-		headerClientFilter.setHeader(apiHeader);
-	}
-	
-	/**
-	 * Remove header for the next request
-	 * 
-	 * @param name Name of the header
-	 */
-	public void removeHeaderForNextRequest(String name) {
-		headerClientFilter.removeHeaderForNextRequest(name);
-	}
-	
-	/**
-	 * Replace header for the next request
-	 * 
-	 * @param name Name of the header
-	 * @param value Value of the header
-	 */
-	public void replaceHeaderForNextRequest(String name, String value) {
-		headerClientFilter.replaceHeaderForNextRequest(name, value);
-	}
-
-	/**
-	 * Retrieve a target from the jersey client from the path and query param builder
-	 * 
-	 * @param uriBuilder The uri builder
-	 * @return The jersey web target
-	 */
-	private JerseyWebTarget target(ApiUriBuilder uriBuilder) {
-		return configure(client.target(entryPoint), uriBuilder);
-	}
-	
-	/**
-	 * Build response object from jersey response
-	 * 
-	 * @param response The jersey response
-	 * @return The API response
-	 */
-	private ApiTestResponse response(Response response) {
-		return new ApiTestResponse(response);
-	}
-	
-	/**
-	 * Configure a target from the API uri builder
-	 * 
-	 * @param target The jersey target to configure
-	 * @param uriBuilder The uri builder
-	 * @return The target updated
-	 */
-	private static JerseyWebTarget configure(JerseyWebTarget target, ApiUriBuilder uriBuilder) {
-		if (uriBuilder != null) {
-			for (String path : uriBuilder.getPathElements()) {
-				target = target.path(path);
-			}
-
-			for (Map.Entry<String, Object> queryParam : uriBuilder.getQueryParams().entrySet()) {
-				target = target.queryParam(queryParam.getKey(), queryParam.getValue());
-			}
+		try {
+			client.close();
+		} catch (IOException ex) {
+			throw new ApiTestException("Could not close the HTTP client", ex);
 		}
-		
-		return target;
+	}
+
+	/**
+	 * Performs an API request and returns the response.
+	 *
+	 * @param request the request to execute
+	 * @return the API response
+	 * @throws ApiTestException if an error occurred executing the request or consuming the response
+	 */
+	public ApiTestResponse execute(ApiTestRequest request) {
+
+		final CloseableHttpResponse response;
+		try {
+
+			// execute the Apache request object
+			response = client.execute(request.getRequestObject());
+
+			// build and return the API response
+			return buildResponse(response);
+
+		} catch (IOException ioe) {
+			throw new ApiTestException("Could not complete request " + request, ioe);
+		}
+	}
+
+	/**
+	 * Builds an API response wrapper from an Apache HTTP response. Ensures the HTTP response is
+	 * fully consumed and closed.
+	 *
+	 * @param response the HTTP response to consume
+	 * @return an API response
+	 * @throws IOException
+	 */
+	private ApiTestResponse buildResponse(CloseableHttpResponse response) throws IOException {
+
+		final ApiTestResponse responseWrapper;
+		try {
+			responseWrapper = new ApiTestResponse(response);
+			EntityUtils.consume(response.getEntity());
+		} finally {
+			response.close();
+		}
+
+		return responseWrapper;
 	}
 }

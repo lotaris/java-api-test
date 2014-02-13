@@ -1,74 +1,91 @@
 package com.lotaris.api.test.client;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
-import javax.ws.rs.core.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 
 /**
- * Represent a response object that can be manipulated into the tests. It wraps the
- * real response object the possibility to switch the implementation of the client
- * used to do the HTTP requests.
- * 
+ * HTTP response wrapper.
+ *
  * @author Laurent Prevost <laurent.prevost@lotaris.com>
+ * @author Simon Oulevay <simon.oulevay@lotaris.com>
  */
 public class ApiTestResponse {
-	/**
-	 * Jersey response
-	 */
-	private Response response;
-	
-	/**
-	 * Cache to avoid stream issue
-	 */
-	private String cachedResponseAsString;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param response The wrapped response
+	 * The internal Apache HTTP response.
 	 */
-	protected ApiTestResponse(Response response) {
+	private HttpResponse response;
+	/**
+	 * The cached response body.
+	 */
+	private String responseBody;
+
+	/**
+	 * Constructs a new API response from an Apache HTTP response.
+	 *
+	 * @param response the HTTP response
+	 * @throws IOException if the response could not be consumed or closed
+	 */
+	protected ApiTestResponse(HttpResponse response) throws IOException {
 		this.response = response;
+		this.responseBody = readResponseBody(response);
 	}
-	
+
 	/**
-	 * @return The Jersey response
-	 */
-	protected Response getResponse() {
-		return response;
-	}
-	
-	/**
-	 * @return The HTTP code status
+	 * Returns the HTTP status code of this response.
+	 *
+	 * @return an integer status code
+	 * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 	 */
 	public int getStatus() {
-		return response.getStatus();
+		return response.getStatusLine().getStatusCode();
 	}
-	
+
 	/**
-	 * @param headerName The header name
-	 * @return The string value of the header
+	 * Returns the value of the specified response header. If the header is present multiple times
+	 * in the response, the value of the first header is returned.
+	 *
+	 * @param headerName the header name
+	 * @return the value of the first response header with the given name, or null if there is none
 	 */
 	public String getHeaderString(String headerName) {
-		return response.getHeaderString(headerName);
+		return response.getFirstHeader(headerName).getValue();
 	}
-	
+
 	/**
-	 * @return The response body as string
+	 * Returns the response body as a string. If the response has no body, an empty string is
+	 * returned.
+	 *
+	 * @return the response body string (which may be empty but not null)
 	 */
 	public String getResponseAsString() {
-		if (cachedResponseAsString == null) {
-			cachedResponseAsString = response.readEntity(String.class);
-		}
-		
-		return cachedResponseAsString;
+		return responseBody != null ? responseBody : "";
 	}
-	
+
 	/**
-	 * @return The response body as JSON object
+	 * Returns the response body as a JSON object.
+	 *
+	 * @return a JSON object
+	 * @throws JsonException if the response body could not be read or is not valid JSON
 	 */
 	public JsonObject getResponseAsJsonObject() {
 		return Json.createReader(new StringReader(getResponseAsString())).readObject();
+	}
+
+	/**
+	 * Returns the HTTP response body as an UTF-8 string.
+	 *
+	 * @param response the HTTP response whose body to read
+	 * @return the response body as a string
+	 * @throws IOException if the response entity could not be read
+	 */
+	private static String readResponseBody(HttpResponse response) throws IOException {
+		return response.getEntity() != null ? EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8) : null;
 	}
 }

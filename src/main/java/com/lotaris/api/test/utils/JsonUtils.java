@@ -8,10 +8,11 @@ import javax.json.JsonObjectBuilder;
 
 /**
  * Utility methods when working with JSON objects
- * 
+ *
  * @author Baptiste Roth <baptiste.roth@lotaris.com>
  */
 public class JsonUtils {
+
 	public static JsonObjectBuilder mapToJsonObjectBuilder(Map<String, String> map) {
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 		if (map == null || map.isEmpty()) {
