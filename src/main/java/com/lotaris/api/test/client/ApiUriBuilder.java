@@ -24,7 +24,7 @@ public class ApiUriBuilder {
 	/**
 	 * Query parameters.
 	 */
-	private Map<String, Object> queryParams;
+	private Map<String, List<Object>> queryParams;
 	/**
 	 * Path elements.
 	 */
@@ -68,7 +68,24 @@ public class ApiUriBuilder {
 	 * @return this builder
 	 */
 	public ApiUriBuilder queryParam(String name, Object value) {
-		queryParams.put(name, value);
+		getQueryParamList(name).add(value);
+		return this;
+	}
+
+	/**
+	 * Add a query parameter with multiple values to the URI. For three values, the query string
+	 * will contain the parameter three times, once for each value.
+	 *
+	 * @param name parameter name
+	 * @param values parameter values
+	 * @return this builder
+	 */
+	public ApiUriBuilder queryParam(String name, Object... values) {
+
+		for (Object value : values) {
+			queryParam(name, value);
+		}
+
 		return this;
 	}
 
@@ -86,6 +103,22 @@ public class ApiUriBuilder {
 		}
 	}
 
+	/**
+	 * Returns the list of values for a query param.
+	 *
+	 * @param name the name of the query param
+	 * @return a list of values
+	 */
+	private List<Object> getQueryParamList(final String name) {
+
+		// create the list if necessary
+		if (!queryParams.containsKey(name)) {
+			queryParams.put(name, new ArrayList<>());
+		}
+
+		return queryParams.get(name);
+	}
+
 	private URI buildUri() throws URISyntaxException {
 
 		// build the URI from the base URI and path elements
@@ -98,8 +131,10 @@ public class ApiUriBuilder {
 		final URIBuilder uriBuilder = new URIBuilder(builder.toString());
 
 		// add all query parameters
-		for (Map.Entry<String, Object> queryParam : queryParams.entrySet()) {
-			uriBuilder.addParameter(queryParam.getKey(), queryParam.getValue().toString());
+		for (Map.Entry<String, List<Object>> queryParam : queryParams.entrySet()) {
+			for (Object value : queryParam.getValue()) {
+				uriBuilder.addParameter(queryParam.getKey(), value.toString());
+			}
 		}
 
 		return uriBuilder.build();
