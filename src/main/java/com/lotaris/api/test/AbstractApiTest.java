@@ -74,7 +74,6 @@ public abstract class AbstractApiTest {
 	}
 	//</editor-fold>
 
-	//<editor-fold defaultstate="collapsed" desc="Construction Template">
 	/**
 	 * Template method responsible for initializing the API test class.
 	 */
@@ -146,7 +145,6 @@ public abstract class AbstractApiTest {
 	 * @return a header configurator locator
 	 */
 	protected abstract IApiHeaderConfiguratorLocator getHeaderConfiguratorLocator();
-	//</editor-fold>
 
 	//<editor-fold defaultstate="collapsed" desc="Helpers: URIs">
 	/**
@@ -333,6 +331,26 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
+	 * Alias for {@link #setHeaderForAllRequests(java.lang.String, java.lang.String)}.
+	 *
+	 * @param name header name
+	 * @param value header value
+	 */
+	protected void replaceHeaderForAllRequests(String name, String value) {
+		setHeaderForAllRequests(name, value);
+	}
+
+	/**
+	 * Alias for
+	 * {@link #setHeaderForAllRequests(com.lotaris.api.test.headers.ApiHeader)}.
+	 *
+	 * @param header the header to set
+	 */
+	protected void replaceHeaderForAllRequests(ApiHeader header) {
+		setHeaderForAllRequests(header);
+	}
+
+	/**
 	 * Alias for {@link #setHeaderForNextRequest(java.lang.String, java.lang.String)}.
 	 *
 	 * @param name header name
@@ -353,31 +371,23 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
-	 * Removes a header for the next request. All headers with the specified name are removed.
-	 *
-	 * @param name name of the header to remove
-	 */
-	protected void removeHeaderForNextRequest(String name) {
-		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, new ApiHeader(name, null), false);
-	}
-
-	/**
-	 * Removes headers for the next request. All headers with the specified names are removed.
-	 *
-	 * @param headerConfiguration headers to remove
-	 */
-	protected void removeHeadersForNextRequest(IApiHeaderConfiguration headerConfiguration) {
-		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, headerConfiguration, false);
-	}
-
-	/**
 	 * Removes a header for all subsequent requests. All headers with the specified name are
 	 * removed.
 	 *
 	 * @param name name of the header to remove
 	 */
 	protected void removeHeaderForAllRequests(String name) {
-		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, new ApiHeader(name, null), true);
+		removeHeaderForAllRequests(new ApiHeader(name, null));
+	}
+
+	/**
+	 * Removes a header for all subsequent requests. All headers with the specified name are
+	 * removed.
+	 *
+	 * @param header the header to remove
+	 */
+	protected void removeHeaderForAllRequests(ApiHeader header) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, header, true);
 	}
 
 	/**
@@ -388,6 +398,33 @@ public abstract class AbstractApiTest {
 	 */
 	protected void removeHeadersForAllRequests(IApiHeaderConfiguration headerConfiguration) {
 		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, headerConfiguration, true);
+	}
+
+	/**
+	 * Removes a header for the next request. All headers with the specified name are removed.
+	 *
+	 * @param name name of the header to remove
+	 */
+	protected void removeHeaderForNextRequest(String name) {
+		removeHeaderForNextRequest(new ApiHeader(name, null));
+	}
+
+	/**
+	 * Removes a header for the next request. All headers with the specified name are removed.
+	 *
+	 * @param header the header to remove
+	 */
+	protected void removeHeaderForNextRequest(ApiHeader header) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, header, false);
+	}
+
+	/**
+	 * Removes headers for the next request. All headers with the specified names are removed.
+	 *
+	 * @param headerConfiguration headers to remove
+	 */
+	protected void removeHeadersForNextRequest(IApiHeaderConfiguration headerConfiguration) {
+		headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.REMOVE, headerConfiguration, false);
 	}
 	//</editor-fold>
 
