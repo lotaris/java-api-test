@@ -181,6 +181,26 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
+	 * Performs a HEAD request on a resource.
+	 *
+	 * @param singlePath a single path element
+	 * @return the API response
+	 */
+	protected ApiTestResponse headResource(String singlePath) {
+		return headResource(uri(singlePath));
+	}
+
+	/**
+	 * Performs a HEAD request on a resource.
+	 *
+	 * @param uriBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse headResource(ApiUriBuilder uriBuilder) {
+		return executeRequestWithoutBody(ApiTestRequest.HEAD, uriBuilder);
+	}
+
+	/**
 	 * Performs a POST request on a resource.
 	 *
 	 * @param body the request body
@@ -341,8 +361,7 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
-	 * Alias for
-	 * {@link #setHeaderForAllRequests(com.lotaris.api.test.headers.ApiHeader)}.
+	 * Alias for {@link #setHeaderForAllRequests(com.lotaris.api.test.headers.ApiHeader)}.
 	 *
 	 * @param header the header to set
 	 */
@@ -469,17 +488,37 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	private ApiTestResponse executeJsonRequest(String method, ApiUriBuilder uriBuilder, JsonStructure json) {
-		
+
 		// prepare request entity (if present); Content-Type header is defined by the entity
 		final ApiTestRequestBody entity = json != null ? ApiTestRequestBody.fromJson(json) : null;
-		
+
 		// build request and set Accept header
 		final ApiTestRequest request = new ApiTestRequest(method, uriBuilder, entity);
 		request.setHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
-		
+
 		// configure request headers
 		headersManagerRule.getHeadersManager().applyConfiguration(request);
-		
+
+		// perform the request and return the response
+		return clientRule.getClient().execute(request);
+	}
+
+	/**
+	 * Executes an API request that has no body and does not expect the response to have a body. No
+	 * <tt>Accept</tt> header is set. Request headers are configured by the headers manager rule.
+	 *
+	 * @param method the HTTP method
+	 * @param uriBuilder the URI builder
+	 * @return the API response
+	 */
+	private ApiTestResponse executeRequestWithoutBody(String method, ApiUriBuilder uriBuilder) {
+
+		// build request
+		final ApiTestRequest request = new ApiTestRequest(method, uriBuilder);
+
+		// configure request headers
+		headersManagerRule.getHeadersManager().applyConfiguration(request);
+
 		// perform the request and return the response
 		return clientRule.getClient().execute(request);
 	}

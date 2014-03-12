@@ -6,6 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -23,6 +24,10 @@ public class ApiTestRequest {
 	 * The HTTP GET method.
 	 */
 	public static final String GET = HttpGet.METHOD_NAME;
+	/**
+	 * The HTTP HEAD method.
+	 */
+	public static final String HEAD = HttpHead.METHOD_NAME;
 	/**
 	 * The HTTP POST method.
 	 */
@@ -187,6 +192,8 @@ public class ApiTestRequest {
 		switch (method) {
 			case GET:
 				return new HttpGet(uri);
+			case HEAD:
+				return new HttpHead(uri);
 			case POST:
 				return new HttpPost(uri);
 			case PUT:
