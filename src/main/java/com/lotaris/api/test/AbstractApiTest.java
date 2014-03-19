@@ -4,6 +4,7 @@ import com.lotaris.dcc.test.rules.ApiTestClientRule;
 import com.lotaris.dcc.test.rules.ApiTestHeaderConfigurationRule;
 import com.jayway.jsonassert.JsonAssert;
 import com.jayway.jsonassert.JsonAsserter;
+import com.lotaris.api.test.client.ApiTestFormUrlEncoded;
 import com.lotaris.dcc.test.rules.ApiTestHeadersManagerRule;
 import com.lotaris.api.test.client.ApiTestRequest;
 import com.lotaris.api.test.client.ApiTestRequestBody;
@@ -177,7 +178,7 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse getResource(ApiUriBuilder uriBuilder) {
-		return executeJsonRequest(ApiTestRequest.GET, uriBuilder, null);
+		return executeStandardRequest(ApiTestRequest.GET, uriBuilder, (JsonStructure) null);
 	}
 
 	/**
@@ -219,7 +220,18 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse postResource(JsonStructure body, ApiUriBuilder urlBuilder) {
-		return executeJsonRequest(ApiTestRequest.POST, urlBuilder, body);
+		return executeStandardRequest(ApiTestRequest.POST, urlBuilder, body);
+	}
+
+	/**
+	 * Performs a POST request on a resource.
+	 *
+	 * @param body the request body
+	 * @param urlBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse postResource(ApiTestFormUrlEncoded body, ApiUriBuilder urlBuilder) {
+		return executeStandardRequest(ApiTestRequest.POST, urlBuilder, body);
 	}
 
 	/**
@@ -241,7 +253,18 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse putResource(JsonStructure body, ApiUriBuilder uriBuilder) {
-		return executeJsonRequest(ApiTestRequest.PUT, uriBuilder, body);
+		return executeStandardRequest(ApiTestRequest.PUT, uriBuilder, body);
+	}
+
+	/**
+	 * Performs a PUT request on a resource.
+	 *
+	 * @param body the request body
+	 * @param uriBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse putResource(ApiTestFormUrlEncoded body, ApiUriBuilder uriBuilder) {
+		return executeStandardRequest(ApiTestRequest.PUT, uriBuilder, body);
 	}
 
 	/**
@@ -263,7 +286,18 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse patchResource(JsonStructure body, ApiUriBuilder uriBuilder) {
-		return executeJsonRequest(ApiTestRequest.PATCH, uriBuilder, body);
+		return executeStandardRequest(ApiTestRequest.PATCH, uriBuilder, body);
+	}
+
+	/**
+	 * Performs a PATCH request on a resource.
+	 *
+	 * @param body the request body
+	 * @param uriBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse patchResource(ApiTestFormUrlEncoded body, ApiUriBuilder uriBuilder) {
+		return executeStandardRequest(ApiTestRequest.PATCH, uriBuilder, body);
 	}
 
 	/**
@@ -283,7 +317,7 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse deleteResource(ApiUriBuilder uriBuilder) {
-		return executeJsonRequest(ApiTestRequest.DELETE, uriBuilder, null);
+		return executeStandardRequest(ApiTestRequest.DELETE, uriBuilder, (JsonStructure) null);
 	}
 	//</editor-fold>
 
@@ -487,10 +521,45 @@ public abstract class AbstractApiTest {
 	 * @param json an optional JSON request body
 	 * @return the API response
 	 */
-	private ApiTestResponse executeJsonRequest(String method, ApiUriBuilder uriBuilder, JsonStructure json) {
+	private ApiTestResponse executeStandardRequest(String method, ApiUriBuilder uriBuilder, JsonStructure json) {
+		return executeStandardRequest(method, uriBuilder, json != null ? ApiTestRequestBody.from(json) : null);
+	}
 
-		// prepare request entity (if present); Content-Type header is defined by the entity
-		final ApiTestRequestBody entity = json != null ? ApiTestRequestBody.fromJson(json) : null;
+	/**
+	 * Executes an API request that has a form URL-encoded body and expects a JSON response. By
+	 * default:
+	 *
+	 * <ul>
+	 * <li>the <tt>Accept</tt> header is set to <tt>application/json</tt>;</li>
+	 * <li>if provided, the form URL-encoded data is used as the request body and the
+	 * <tt>Content-Type</tt>
+	 * header is set to <tt>application/x-www-form-urlencoded</tt>;</li>
+	 * <li>request headers are configured by the headers manager rule.</li>
+	 * </ul>
+	 *
+	 * @param method the HTTP method
+	 * @param uriBuilder the URI builder
+	 * @param data optional name/value pairs to use as request body
+	 * @return the API response
+	 */
+	private ApiTestResponse executeStandardRequest(String method, ApiUriBuilder uriBuilder, ApiTestFormUrlEncoded data) {
+		return executeStandardRequest(method, uriBuilder, data != null ? ApiTestRequestBody.from(data) : null);
+	}
+
+	/**
+	 * Executes an API request that expects a JSON response. By default:
+	 *
+	 * <ul>
+	 * <li>the <tt>Accept</tt> header is set to <tt>application/json</tt>;</li>
+	 * <li>request headers are configured by the headers manager rule.</li>
+	 * </ul>
+	 *
+	 * @param method the HTTP method
+	 * @param uriBuilder the URI builder
+	 * @param entity the entity to use as request body (it defines the <tt>Content-Type</tt> header)
+	 * @return the API response
+	 */
+	private ApiTestResponse executeStandardRequest(String method, ApiUriBuilder uriBuilder, ApiTestRequestBody entity) {
 
 		// build request and set Accept header
 		final ApiTestRequest request = new ApiTestRequest(method, uriBuilder, entity);
