@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import org.apache.http.HttpResponse;
@@ -78,6 +79,16 @@ public class ApiTestResponse {
 		return Json.createReader(new StringReader(getResponseAsString())).readObject();
 	}
 
+	/**
+	 * Returns the response body as a JSON array.
+	 *
+	 * @return a JSON array
+	 * @throws JsonException if the response body could not be read or is not valid JSON
+	 */
+	public JsonArray getResponseAsJsonArray() {
+		return Json.createReader(new StringReader(getResponseAsString())).readArray();
+	}
+	
 	/**
 	 * Returns the HTTP response body as an UTF-8 string.
 	 *
