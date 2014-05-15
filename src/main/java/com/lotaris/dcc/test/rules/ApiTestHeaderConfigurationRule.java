@@ -4,6 +4,11 @@ import com.lotaris.api.test.headers.IApiHeaderConfiguration;
 import com.lotaris.api.test.headers.IApiHeaderConfiguratorLocator;
 import com.lotaris.api.test.headers.ApiHeaderConfigurator;
 import com.lotaris.api.test.headers.ApiHeadersManager;
+import com.lotaris.api.test.headers.IApiHeaderConfigurator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -58,12 +63,19 @@ public class ApiTestHeaderConfigurationRule implements TestRule {
 		final ApiHeaderConfigurator headerConfigurator = description.getAnnotation(ApiHeaderConfigurator.class);
 		if (headerConfigurator != null) {
 
-			// retrieve the header configuration
-			final IApiHeaderConfiguration configuration =
-					headerConfiguratorLocator.getHeaderConfigurator(headerConfigurator.value()).getApiHeaderConfiguration();
+			List<IApiHeaderConfigurator> configuratiors = new ArrayList<>();
+			
+			// get the list of configurators to retrieve header configurations
+			for (Class<? extends IApiHeaderConfigurator> apiConfigClass : headerConfigurator.value()) {
+				// retrieve the header configurator
+				final IApiHeaderConfigurator configurator = headerConfiguratorLocator.getHeaderConfigurator(apiConfigClass);
 
-			// apply the configuration to the headers manager
-			headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, configuration, true);
+				// add each configuration
+				for (IApiHeaderConfiguration configuration : configurator.getApiHeaderConfigurations()) {
+					// apply the configuration to the headers manager
+					headersManagerRule.getHeadersManager().configure(ApiHeadersManager.Operation.SET, configuration, true);
+				}
+			}
 		}
 	}
 }

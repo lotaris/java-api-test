@@ -19,5 +19,5 @@ public @interface ApiHeaderConfigurator {
 	 *
 	 * @return an API header configurator class
 	 */
-	Class<? extends IApiHeaderConfigurator> value();
+	Class<? extends IApiHeaderConfigurator>[] value();
 }
