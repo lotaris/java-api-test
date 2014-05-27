@@ -20,4 +20,9 @@ public interface IApiTestClientConfiguration {
 	 * @return Proxy port
 	 */
 	int getProxyPort();
+	
+	/**
+	 * @return The host for which a proxy should not be used
+	 */
+	String[] getProxyExceptions();
 }

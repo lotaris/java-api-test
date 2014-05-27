@@ -1,11 +1,15 @@
 package com.lotaris.api.test.client;
 
 import java.io.IOException;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -27,10 +31,28 @@ public class ApiTestClient {
 	 * 
 	 * @param clientConfiguration  The client configuration
 	 */
-	public ApiTestClient(IApiTestClientConfiguration clientConfiguration) {
+	public ApiTestClient(final IApiTestClientConfiguration clientConfiguration) {
 		if (clientConfiguration.isProxyEnabled()) {
 			HttpHost proxy = new HttpHost(clientConfiguration.getProxyHost(), clientConfiguration.getProxyPort());
-			DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+
+			// Create a proxy route planner to check if host should force to avoid using proxy
+			DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy) {
+				@Override
+				public HttpRoute determineRoute(HttpHost host, HttpRequest request, HttpContext context) throws HttpException {
+					// Retrieve the host name
+					String hostname = host.getHostName();
+					
+					// Check each exceptions
+					for (String hostToCheck : clientConfiguration.getProxyExceptions()) {
+						if (hostname.equals(hostToCheck)) {
+							return new HttpRoute(host);
+						}
+					}
+					
+					return super.determineRoute(host, request, context);
+				}
+			};
+			
 			client = HttpClients.custom().setRoutePlanner(routePlanner).build();
 		}
 		else {
