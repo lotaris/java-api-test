@@ -85,6 +85,16 @@ public abstract class AbstractApiTest {
 		// cache entry point
 		entryPoint = getEntryPoint();
 
+		// Configure the Proxy for URL Connection if necessary
+		IApiTestClientConfiguration clientConfiguration = getClientConfiguration();
+		if (clientConfiguration != null && clientConfiguration.isProxyEnabled()) {
+			System.setProperty("http.proxyHost", clientConfiguration.getProxyHost());
+			System.setProperty("https.proxyHost", clientConfiguration.getProxyHost());
+			System.setProperty("http.proxyPort", clientConfiguration.getProxyPort() + "");
+			System.setProperty("https.proxyPort", clientConfiguration.getProxyPort() + "");
+		}
+		
+		
 		// create rules
 		clientRule = new ApiTestClientRule(getClientConfiguration());
 		headersManagerRule = new ApiTestHeadersManagerRule();
