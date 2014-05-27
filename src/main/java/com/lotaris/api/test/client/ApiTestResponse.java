@@ -2,11 +2,13 @@ package com.lotaris.api.test.client;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -27,6 +29,11 @@ public class ApiTestResponse {
 	 */
 	private String responseBody;
 
+	/**
+	 * URI from the request
+	 */
+	private URI requestUri;
+	
 	/**
 	 * Constructs a new API response from an Apache HTTP response.
 	 *
@@ -77,6 +84,24 @@ public class ApiTestResponse {
 	 */
 	public JsonObject getResponseAsJsonObject() {
 		return Json.createReader(new StringReader(getResponseAsString())).readObject();
+	}
+	
+	/**
+	 * @return The request URI
+	 */
+	public URI getRequestUri() {
+		return requestUri;
+	}
+	
+	/**
+	 * Gather information from the request to enrich the info of the response
+	 * 
+	 * @param request The request to get the info
+	 * @return this
+	 */
+	public ApiTestResponse enrichFromRequest(ApiTestRequest request) {
+		requestUri = request.getUri();
+		return this;
 	}
 
 	/**
