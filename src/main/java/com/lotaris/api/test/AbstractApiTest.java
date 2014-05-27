@@ -10,6 +10,7 @@ import com.lotaris.api.test.client.ApiTestRequest;
 import com.lotaris.api.test.client.ApiTestRequestBody;
 import com.lotaris.api.test.client.ApiUriBuilder;
 import com.lotaris.api.test.client.ApiTestResponse;
+import com.lotaris.api.test.client.IApiTestClientConfiguration;
 import com.lotaris.api.test.headers.ApiHeader;
 import com.lotaris.api.test.headers.ApiHeaderConfigurator;
 import com.lotaris.api.test.headers.ApiHeadersManager;
@@ -85,7 +86,7 @@ public abstract class AbstractApiTest {
 		entryPoint = getEntryPoint();
 
 		// create rules
-		clientRule = new ApiTestClientRule();
+		clientRule = new ApiTestClientRule(getClientConfiguration());
 		headersManagerRule = new ApiTestHeadersManagerRule();
 		headerConfigurationRule = new ApiTestHeaderConfigurationRule(getHeaderConfiguratorLocator(), headersManagerRule);
 
@@ -119,7 +120,12 @@ public abstract class AbstractApiTest {
 	 * @see #uri(java.lang.String[])
 	 */
 	protected abstract String getEntryPoint();
-
+	
+	/**
+	 * @return The configuration for the client
+	 */
+	protected abstract IApiTestClientConfiguration getClientConfiguration();
+	
 	/**
 	 * Returns the operations that must be run after the HTTP client and headers manager have been
 	 * created.

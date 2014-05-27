@@ -1,9 +1,11 @@
 package com.lotaris.api.test.client;
 
 import java.io.IOException;
+import org.apache.http.HttpHost;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -22,11 +24,20 @@ public class ApiTestClient {
 	/**
 	 * Constructs a new client. The client should be released with {@link #close()} when no longer
 	 * useful.
+	 * 
+	 * @param clientConfiguration  The client configuration
 	 */
-	public ApiTestClient() {
-		this.client = HttpClients.createSystem();
+	public ApiTestClient(IApiTestClientConfiguration clientConfiguration) {
+		if (clientConfiguration.isProxyEnabled()) {
+			HttpHost proxy = new HttpHost(clientConfiguration.getProxyHost(), clientConfiguration.getProxyPort());
+			DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+			client = HttpClients.custom().setRoutePlanner(routePlanner).build();
+		}
+		else {
+			client = HttpClients.createDefault();
+		}
 	}
-
+	
 	/**
 	 * Closes this client and all associated resources.
 	 *

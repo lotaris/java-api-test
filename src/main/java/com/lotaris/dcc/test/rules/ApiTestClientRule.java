@@ -1,6 +1,7 @@
 package com.lotaris.dcc.test.rules;
 
 import com.lotaris.api.test.client.ApiTestClient;
+import com.lotaris.api.test.client.IApiTestClientConfiguration;
 import org.junit.rules.ExternalResource;
 
 /**
@@ -16,9 +17,24 @@ public class ApiTestClientRule extends ExternalResource {
 	 */
 	private ApiTestClient client;
 
+	/**
+	 * Client configuration
+	 */
+	private IApiTestClientConfiguration clientConfiguration;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param clientConfiguration The client configuration
+	 * @param proxyPort The proxy port
+	 */
+	public ApiTestClientRule(IApiTestClientConfiguration clientConfiguration) {
+		this.clientConfiguration = clientConfiguration;
+	}
+	
 	@Override
 	protected void before() throws Throwable {
-		client = new ApiTestClient();
+		client = new ApiTestClient(clientConfiguration);
 	}
 
 	@Override
@@ -33,5 +49,5 @@ public class ApiTestClientRule extends ExternalResource {
 	 */
 	public ApiTestClient getClient() {
 		return client;
-	}
+	}	
 }
