@@ -67,7 +67,7 @@ public class ApiTestClient {
 			response = client.execute(request.getRequestObject());
 
 			// build and return the API response
-			return buildResponse(response);
+			return buildResponse(response).enrichFromRequest(request);
 
 		} catch (IOException ioe) {
 			throw new ApiTestException("Could not complete request " + request, ioe);
