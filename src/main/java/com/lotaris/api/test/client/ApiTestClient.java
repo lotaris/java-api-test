@@ -24,7 +24,7 @@ public class ApiTestClient {
 	 * useful.
 	 */
 	public ApiTestClient() {
-		this.client = HttpClients.createDefault();
+		this.client = HttpClients.createSystem();
 	}
 
 	/**
