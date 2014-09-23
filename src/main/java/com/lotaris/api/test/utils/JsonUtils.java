@@ -32,7 +32,7 @@ public class JsonUtils {
 	 * Method used to build the JSON Array of Strings.
 	 * @return A JsonArray object
 	 */
-	private static JsonArray listToJsonArray(List<String> list) {
+	public static JsonArray listToJsonArray(List<String> list) {
 		JsonArrayBuilder ab = Json.createArrayBuilder();
 			for(String element : list) {
 				ab.add(element);
