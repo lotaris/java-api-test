@@ -27,16 +27,19 @@ public class JsonUtils {
 		}
 		return jsonObject;
 	}
-	
-		/**
+
+	/**
 	 * Method used to build the JSON Array of Strings.
+	 *
 	 * @return A JsonArray object
 	 */
 	public static JsonArray listToJsonArray(List<String> list) {
 		JsonArrayBuilder ab = Json.createArrayBuilder();
-			for(String element : list) {
-				ab.add(element);
-			}
-			return ab.build();
+		
+		for (String element : list) {
+			ab.add(element);
+		}
+		
+		return ab.build();
 	}
 }
