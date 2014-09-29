@@ -1,4 +1,4 @@
-package com.lotaris.dcc.test.rules;
+package com.lotaris.api.test.rules;
 
 import com.lotaris.api.test.headers.ApiHeadersManager;
 import org.junit.rules.ExternalResource;

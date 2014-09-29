@@ -1,11 +1,11 @@
 package com.lotaris.api.test;
 
-import com.lotaris.dcc.test.rules.ApiTestClientRule;
-import com.lotaris.dcc.test.rules.ApiTestHeaderConfigurationRule;
+import com.lotaris.api.test.rules.ApiTestClientRule;
+import com.lotaris.api.test.rules.ApiTestHeaderConfigurationRule;
 import com.jayway.jsonassert.JsonAssert;
 import com.jayway.jsonassert.JsonAsserter;
 import com.lotaris.api.test.client.ApiTestFormUrlEncoded;
-import com.lotaris.dcc.test.rules.ApiTestHeadersManagerRule;
+import com.lotaris.api.test.rules.ApiTestHeadersManagerRule;
 import com.lotaris.api.test.client.ApiTestRequest;
 import com.lotaris.api.test.client.ApiTestRequestBody;
 import com.lotaris.api.test.client.ApiUriBuilder;
