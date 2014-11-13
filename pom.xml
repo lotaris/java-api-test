@@ -4,9 +4,37 @@
 
   <groupId>com.lotaris.api</groupId>
   <artifactId>java-api-test</artifactId>
-  <name>Lotaris API Test Library</name>
   <version>1.4.1-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+  <name>Lotaris API Test Library</name>
+	<description>Testing library to help writing API tests.</description>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Simon Oulevay</name>
+			<email>simon.oulevay@lotaris.com</email>
+			<organization>https://github.com/lotaris</organization>
+		</developer>
+		<developer>
+			<name>Laurent Prevost</name>
+			<email>laurent.prevost@lotaris.com</email>
+			<organization>https://github.com/lotaris</organization>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:lotaris/java-api-test.git</connection>
+		<developerConnection>scm:git:git@github.com:lotaris/java-api-test.git</developerConnection>
+		<url>https://github.com/lotaris/java-api-test</url>
+	</scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
