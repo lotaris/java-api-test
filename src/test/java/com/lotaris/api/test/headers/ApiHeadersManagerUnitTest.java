@@ -1,11 +1,8 @@
-package com.lotaris.dcc.test.headers;
+package com.lotaris.api.test.headers;
 
 import static org.mockito.Mockito.*;
 
 import com.lotaris.api.test.client.ApiTestRequest;
-import com.lotaris.api.test.headers.ApiHeader;
-import com.lotaris.api.test.headers.ApiHeadersManager;
-import com.lotaris.api.test.headers.IApiHeaderConfiguration;
 import com.lotaris.rox.annotations.RoxableTest;
 import com.lotaris.rox.annotations.RoxableTestClass;
 import java.util.Arrays;
@@ -21,7 +18,7 @@ import org.mockito.MockitoAnnotations;
  * @author Simon Oulevay <simon.oulevay@lotaris.com>
  */
 @RoxableTestClass(tags = {"apiTestClient", "apiHeadersManager"})
-public class ApiHeadersManagerUnitTests {
+public class ApiHeadersManagerUnitTest {
 
 	@Mock
 	private ApiTestRequest request;

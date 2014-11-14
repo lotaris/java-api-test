@@ -8,7 +8,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
@@ -49,7 +48,7 @@ public class ApiTestResponse {
 	 * Returns the HTTP status code of this response.
 	 *
 	 * @return an integer status code
-	 * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+	 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 	 */
 	public int getStatus() {
 		return response.getStatusLine().getStatusCode();

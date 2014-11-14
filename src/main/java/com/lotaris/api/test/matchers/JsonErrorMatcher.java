@@ -36,8 +36,8 @@ public class JsonErrorMatcher extends BaseMatcher<String>{
 	 * @return The matcher for convenience
 	 */
 	public JsonErrorMatcher withExpectedErrors(List<Entry<String, Integer>> expectedErrors) {
-		this.expectedErrors = new ArrayList(expectedErrors);
-		this.expectedErrorsLog = new ArrayList(expectedErrors);
+		this.expectedErrors = new ArrayList<>(expectedErrors);
+		this.expectedErrorsLog = new ArrayList<>(expectedErrors);
 		return this;
 	}
 

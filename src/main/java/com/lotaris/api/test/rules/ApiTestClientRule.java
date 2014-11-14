@@ -26,7 +26,6 @@ public class ApiTestClientRule extends ExternalResource {
 	 * Constructor
 	 * 
 	 * @param clientConfiguration The client configuration
-	 * @param proxyPort The proxy port
 	 */
 	public ApiTestClientRule(IApiTestClientConfiguration clientConfiguration) {
 		this.clientConfiguration = clientConfiguration;

@@ -12,9 +12,7 @@ import java.util.List;
 public interface IApiHeaderConfiguration {
 
 	/**
-	 * Returns the headers defined by this configuration.
-	 *
-	 * @return 
+	 * @return Returns the headers defined by this configuration.
 	 */
 	List<ApiHeader> getHeaders();
 }

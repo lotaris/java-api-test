@@ -53,6 +53,7 @@ public class Matchers {
 			private String error;
 
 			@Override
+			@SuppressWarnings("unchecked")
 			public boolean matches(Object item) {
 				Collection<T> actualList = (Collection<T>) item;
 				Iterator<T> expIterator = expectedList.iterator(), actIterator = actualList.iterator();

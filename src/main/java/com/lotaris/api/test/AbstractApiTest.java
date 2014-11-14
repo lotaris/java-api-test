@@ -329,7 +329,7 @@ public abstract class AbstractApiTest {
 	/**
 	 * Performs a DELETE request on a resource.
 	 *
-	 * @param pathBuilder URI builder
+	 * @param uriBuilder URI builder
 	 * @return the API response
 	 */
 	protected ApiTestResponse deleteResource(ApiUriBuilder uriBuilder) {
@@ -401,7 +401,7 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
-	 * Alias for {@link #setHeaderForAllRequests(java.lang.String, java.lang.String)}.
+	 * Alias for {@link AbstractApiTest#setHeaderForAllRequests(java.lang.String, java.lang.String)}.
 	 *
 	 * @param name header name
 	 * @param value header value
@@ -411,7 +411,7 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
-	 * Alias for {@link #setHeaderForAllRequests(com.lotaris.api.test.headers.ApiHeader)}.
+	 * Alias for {@link AbstractApiTest#setHeaderForAllRequests(com.lotaris.api.test.headers.ApiHeader)}.
 	 *
 	 * @param header the header to set
 	 */
@@ -420,7 +420,7 @@ public abstract class AbstractApiTest {
 	}
 
 	/**
-	 * Alias for {@link #setHeaderForNextRequest(java.lang.String, java.lang.String)}.
+	 * Alias for {@link AbstractApiTest#setHeaderForNextRequest(java.lang.String, java.lang.String)}.
 	 *
 	 * @param name header name
 	 * @param value header value
@@ -431,7 +431,7 @@ public abstract class AbstractApiTest {
 
 	/**
 	 * Alias for
-	 * {@link #setHeaderForNextRequest(com.lotaris.dcc.test.utils.client.header.ApiHeader)}
+	 * { @link AbstractApiTest#setHeaderForNextRequest(com.lotaris.dcc.test.utils.client.header.ApiHeader) }
 	 *
 	 * @param header the header to set
 	 */
@@ -503,7 +503,7 @@ public abstract class AbstractApiTest {
 	 *
 	 * @param response the response body to run assertions on
 	 * @return a JSON asserter
-	 * @see https://code.google.com/p/json-path/
+	 * @link https://code.google.com/p/json-path/
 	 */
 	protected JsonAsserter withJson(String response) {
 		return JsonAssert.with(response);
@@ -514,7 +514,7 @@ public abstract class AbstractApiTest {
 	 *
 	 * @param response the response whose body to run assertions on
 	 * @return a JSON asserter
-	 * @see https://code.google.com/p/json-path/
+	 * @link https://code.google.com/p/json-path/
 	 */
 	protected JsonAsserter withJson(ApiTestResponse response) {
 		return withJson(response.getResponseAsString());

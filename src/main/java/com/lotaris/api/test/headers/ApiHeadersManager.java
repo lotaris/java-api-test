@@ -72,7 +72,7 @@ public class ApiHeadersManager {
 
 	/**
 	 * Modifies a request header. Call
-	 * {@link #configure(com.lotaris.api.test.client.ApiTestRequest)} to apply all configured
+	 * {@link ApiHeadersManager#applyConfiguration(com.lotaris.api.test.client.ApiTestRequest)} to apply all configured
 	 * modifications to a request.
 	 *
 	 * @param op what to do with the header (ADD/SET/REMOVE)
@@ -122,7 +122,7 @@ public class ApiHeadersManager {
 
 	/**
 	 * Modifies multiple request headers. Call
-	 * {@link #configure(com.lotaris.api.test.client.ApiTestRequest)} to apply all configured
+	 * {@link ApiHeadersManager#applyConfiguration(com.lotaris.api.test.client.ApiTestRequest)} to apply all configured
 	 * modifications to a request.
 	 *
 	 * @param op what to do with the headers (ADD/SET/REMOVE)

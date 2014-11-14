@@ -106,7 +106,7 @@ public class ApiTestRequestBody {
 	 * Converts the body to an Apache HTTP entity.
 	 *
 	 * @return an HTTP entity
-	 * @see #{@link ApiTestRequest}
+	 * @see ApiTestRequest
 	 */
 	protected HttpEntity toEntity() {
 		return body;
