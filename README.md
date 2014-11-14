@@ -19,7 +19,7 @@ mvn clean install
 <dependency>
   <groupId>com.lotaris.api</groupId>
   <artifactId>java-api-test</artifactId>
-  <version>1.4.0</version>
+  <version>1.4.1</version>
 </dependenc>
 ```
 
