@@ -4,22 +4,13 @@
 
 ## Usage
 
-1. Clone the repository.
-
-2. Run the following command
-
-```bash
-cd <projectFolder>
-mvn clean install
-```
-
-3. Put the following dependency in your pom.xml
+1. Put the following dependency in your pom.xml
 
 ```xml
 <dependency>
   <groupId>com.lotaris.api</groupId>
   <artifactId>java-api-test</artifactId>
-  <version>1.4.1</version>
+  <version>1.4.2</version>
 </dependenc>
 ```
 
