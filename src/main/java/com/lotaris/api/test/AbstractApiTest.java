@@ -4,6 +4,7 @@ import com.lotaris.api.test.rules.ApiTestClientRule;
 import com.lotaris.api.test.rules.ApiTestHeaderConfigurationRule;
 import com.jayway.jsonassert.JsonAssert;
 import com.jayway.jsonassert.JsonAsserter;
+import com.lotaris.api.test.client.ApiTestMultipartFormData;
 import com.lotaris.api.test.client.ApiTestFormUrlEncoded;
 import com.lotaris.api.test.rules.ApiTestHeadersManagerRule;
 import com.lotaris.api.test.client.ApiTestRequest;
@@ -249,6 +250,17 @@ public abstract class AbstractApiTest {
 	protected ApiTestResponse postResource(ApiTestFormUrlEncoded body, ApiUriBuilder urlBuilder) {
 		return executeStandardRequest(ApiTestRequest.POST, urlBuilder, body);
 	}
+	
+	/**
+	 * Performs a POST request on a resource.
+	 *
+	 * @param body the request body
+	 * @param urlBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse postResource(ApiTestMultipartFormData body, ApiUriBuilder urlBuilder) {
+		return executeStandardRequest(ApiTestRequest.POST, urlBuilder, body);
+	}
 
 	/**
 	 * Performs a PUT request on a resource.
@@ -280,6 +292,17 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	protected ApiTestResponse putResource(ApiTestFormUrlEncoded body, ApiUriBuilder uriBuilder) {
+		return executeStandardRequest(ApiTestRequest.PUT, uriBuilder, body);
+	}
+	
+	/**
+	 * Performs a PUT request on a resource.
+	 *
+	 * @param body the request body
+	 * @param uriBuilder URI builder
+	 * @return the API response
+	 */
+	protected ApiTestResponse putResource(ApiTestMultipartFormData body, ApiUriBuilder uriBuilder) {
 		return executeStandardRequest(ApiTestRequest.PUT, uriBuilder, body);
 	}
 
@@ -559,6 +582,27 @@ public abstract class AbstractApiTest {
 	 * @return the API response
 	 */
 	private ApiTestResponse executeStandardRequest(String method, ApiUriBuilder uriBuilder, ApiTestFormUrlEncoded data) {
+		return executeStandardRequest(method, uriBuilder, data != null ? ApiTestRequestBody.from(data) : null);
+	}
+	
+	/**
+	 * Executes an API request that has a multipart form data body and expects a JSON response. By
+	 * default:
+	 *
+	 * <ul>
+	 * <li>the <tt>Accept</tt> header is set to <tt>application/json</tt>;</li>
+	 * <li>if provided, the form URL-encoded data is used as the request body and the
+	 * <tt>Content-Type</tt>
+	 * header is set to <tt>multipart/form-data</tt>;</li>
+	 * <li>request headers are configured by the headers manager rule.</li>
+	 * </ul>
+	 *
+	 * @param method the HTTP method
+	 * @param uriBuilder the URI builder
+	 * @param data optional name/value pairs to use as request body
+	 * @return the API response
+	 */
+	private ApiTestResponse executeStandardRequest(String method, ApiUriBuilder uriBuilder, ApiTestMultipartFormData data) {
 		return executeStandardRequest(method, uriBuilder, data != null ? ApiTestRequestBody.from(data) : null);
 	}
 
