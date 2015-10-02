@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.4.3 - October 1, 2015
+## v1.5.0 - October 1, 2015
 
 * Added support for multipart request (POST and PUT)
 
