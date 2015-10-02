@@ -3,8 +3,6 @@ package com.lotaris.api.test.headers;
 import static org.mockito.Mockito.*;
 
 import com.lotaris.api.test.client.ApiTestRequest;
-import com.lotaris.rox.annotations.RoxableTest;
-import com.lotaris.rox.annotations.RoxableTestClass;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
@@ -17,7 +15,7 @@ import org.mockito.MockitoAnnotations;
  * @see ApiHeadersManager
  * @author Simon Oulevay <simon.oulevay@lotaris.com>
  */
-@RoxableTestClass(tags = {"apiTestClient", "apiHeadersManager"})
+//@RoxableTestClass(tags = {"apiTestClient", "apiHeadersManager"})
 public class ApiHeadersManagerUnitTest {
 
 	@Mock
@@ -31,7 +29,6 @@ public class ApiHeadersManagerUnitTest {
 	}
 
 	@Test
-	@RoxableTest(key = "7a3913364914")
 	public void apiHeadersManagerShouldRemoveRequestHeaders() {
 		final InOrder inOrder = inOrder(request);
 
@@ -64,7 +61,6 @@ public class ApiHeadersManagerUnitTest {
 	}
 
 	@Test
-	@RoxableTest(key = "65bbbae8991f")
 	public void apiHeadersManagerShouldSetRequestHeaders() {
 		final InOrder inOrder = inOrder(request);
 
@@ -98,7 +94,6 @@ public class ApiHeadersManagerUnitTest {
 	}
 
 	@Test
-	@RoxableTest(key = "b35db347bd9c")
 	public void apiHeadersManagerShouldAddRequestHeaders() {
 		final InOrder inOrder = inOrder(request);
 
