@@ -11,6 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 /**
  * HTTP request body wrapper.
@@ -65,6 +66,18 @@ public class ApiTestRequestBody {
 		final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(data.getPairs(), StandardCharsets.UTF_8);
 		return new ApiTestRequestBody(entity);
 	}
+	
+	/**
+	 * Constructs a request body with content type <tt>multipart/form-data</tt> from
+	 * a multi part entity.
+	 *
+	 * @param data The multi part form data
+	 * @return an API request body
+	 */
+	public static ApiTestRequestBody from(ApiTestMultipartFormData data) {
+		return new ApiTestRequestBody(data.getMultipartEntity());
+	}
+	
 	//</editor-fold>
 	/**
 	 * The request body.
