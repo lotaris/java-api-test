@@ -11,7 +11,7 @@
   <groupId>com.lotaris.api</groupId>
   <artifactId>java-api-test</artifactId>
   <version>1.5.0</version>
-</dependenc>
+</dependency>
 ```
 
 ### Requirements
