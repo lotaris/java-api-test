@@ -1,3 +1,7 @@
+### :warning: Unmaintained.
+
+---
+
 # java-api-test
 
 > A Java library to test JSON APIs with JUnit.
